@@ -1,2 +1,2 @@
-# coordinates
+# Coordinates
 Back-end Capstone
