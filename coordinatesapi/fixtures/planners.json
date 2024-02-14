@@ -1,0 +1,13 @@
+[
+  {
+    "model": "coordinatesapi.planner",
+    "pk": 1,
+    "fields": {
+      "first_name": "Frodo",
+      "last_name": "Baggins",
+      "email": "shire@baggins.eye",
+      "phone_number": 9223001,
+      "uid": "filthylittlehobbitses"
+    }
+  }
+]

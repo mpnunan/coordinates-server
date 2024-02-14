@@ -1,0 +1,11 @@
+[
+  {
+    "model": "coordinatesapi.wedding",
+    "pk": 1,
+    "fields": {
+      "venue": "The Eighties",
+      "name": "The Synth Wedding",
+      "planner": 1
+    }
+  }
+]

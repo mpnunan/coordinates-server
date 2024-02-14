@@ -1,0 +1,66 @@
+[
+  {
+    "model": "coordinatesapi.guest",
+    "pk": 1,
+    "fields": {
+      "first_name": "Debbie",
+      "last_name": "Harry"
+    }
+  },
+  {
+    "model": "coordinatesapi.guest",
+    "pk": 2,
+    "fields": {
+      "first_name": "Robert",
+      "last_name": "Smith"
+    }
+  },
+  {
+    "model": "coordinatesapi.guest",
+    "pk": 3,
+    "fields": {
+      "first_name": "Kate",
+      "last_name": "Bush"
+    }
+  },
+  {
+    "model": "coordinatesapi.guest",
+    "pk": 4,
+    "fields": {
+      "first_name": "Michael",
+      "last_name": "Stipe"
+    }
+  },
+  {
+    "model": "coordinatesapi.guest",
+    "pk": 5,
+    "fields": {
+      "first_name": "Stevie",
+      "last_name": "Knicks"
+    }
+  },
+  {
+    "model": "coordinatesapi.guest",
+    "pk": 6,
+    "fields": {
+      "first_name": "Steven",
+      "last_name": "Morrissey"
+    }
+  },
+  {
+    "model": "coordinatesapi.guest",
+    "pk": 7,
+    "fields": {
+      "first_name": "Pat",
+      "last_name": "Benetar"
+    }
+  },
+  {
+    "model": "coordinatesapi.guest",
+    "pk": 8,
+    "fields": {
+      "first_name": "Corey",
+      "last_name": "Glover"
+    }
+  }
+]
