@@ -2,7 +2,8 @@ from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
-from coordinatesapi.models import ReceptionTable, Wedding
+from coordinatesapi.models import ReceptionTable, Wedding, TableGuest, Guest
+from rest_framework.decorators import action
 
 
 class ReceptionTableView(ViewSet):
@@ -43,11 +44,35 @@ class ReceptionTableView(ViewSet):
         reception_table = ReceptionTable.objects.get(pk=pk)
         reception_table.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
+      
+    @action(methods=['post'], detail=True)
+    def add_guest(self, request, pk):
+        reception_table=ReceptionTable.objects.get(pk=pk)
+        guest=Guest.objects.get(pk=request.data["guest"])
+        table_guest = TableGuest.objects.create(
+          reception_table=reception_table,
+          guest=guest,
+        )
+        return Response({'message': 'Item added'}, status=status.HTTP_201_CREATED)
+      
+    @action(methods=['put'], detail=True)
+    def remove_guest(self, request, pk):
+        reception_table=ReceptionTable.objects.get(pk=pk)
+        guest=Guest.objects.get(pk=request.data["guest"])
+        table_guest = TableGuest.objects.filter(
+          reception_table=reception_table,
+          guest=guest,
+        )
+        table_guest.delete()
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
 
 class ReceptionTableSerializer(serializers.ModelSerializer):
+    guests = serializers.SerializerMethodField()
+    def get_guests(self, obj):
+        return [{guest_table.guest.full_name} for guest_table in TableGuest.objects.filter(reception_table=obj)]
     class Meta:
         model = ReceptionTable
-        fields = ('id', 'wedding', 'number', 'capacity')
+        fields = ('id', 'wedding', 'number', 'capacity', 'guests')
         depth = 2
         
 class ReceptionTableSerializerShallow(serializers.ModelSerializer):
