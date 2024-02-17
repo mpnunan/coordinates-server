@@ -1,9 +1,11 @@
 from django.db import models
+from .wedding import Wedding
 
 class Guest(models.Model):
   
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
+    wedding = models.ForeignKey(Wedding, on_delete=models.CASCADE, related_name='guests')
     
     @property
     def seated(self):
