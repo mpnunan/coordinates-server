@@ -23,6 +23,11 @@ class GuestView(ViewSet):
     def list(self, request):
         guests = Guest.objects.all()
         
+        wedding= request.query_params.get('wedding', None)
+        if wedding is not None:
+            guests = guests.filter(wedding_id=wedding)
+        else:
+            guests = []
         for guest in guests:
             guest.seated = len(TableGuest.objects.filter(
                 guest_id=guest

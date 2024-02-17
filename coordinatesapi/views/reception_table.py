@@ -24,6 +24,11 @@ class ReceptionTableView(ViewSet):
     def list(self, request):
         reception_tables = ReceptionTable.objects.all()
         
+        wedding = request.query_params.get('wedding', None)
+        if wedding is not None:
+            reception_tables = reception_tables.filter(wedding_id=wedding)
+        else:
+            reception_tables = []
         for reception_table in reception_tables:
             reception_table.full = len(TableGuest.objects.filter(
                 reception_table_id=reception_table

@@ -4,7 +4,8 @@
     "pk": 1,
     "fields": {
       "first_name": "Debbie",
-      "last_name": "Harry"
+      "last_name": "Harry",
+      "wedding": 1
     }
   },
   {
@@ -12,7 +13,8 @@
     "pk": 2,
     "fields": {
       "first_name": "Robert",
-      "last_name": "Smith"
+      "last_name": "Smith",
+      "wedding": 1
     }
   },
   {
@@ -20,7 +22,8 @@
     "pk": 3,
     "fields": {
       "first_name": "Kate",
-      "last_name": "Bush"
+      "last_name": "Bush",
+      "wedding": 1
     }
   },
   {
@@ -28,7 +31,8 @@
     "pk": 4,
     "fields": {
       "first_name": "Michael",
-      "last_name": "Stipe"
+      "last_name": "Stipe",
+      "wedding": 1
     }
   },
   {
@@ -36,7 +40,8 @@
     "pk": 5,
     "fields": {
       "first_name": "Stevie",
-      "last_name": "Knicks"
+      "last_name": "Knicks",
+      "wedding": 1
     }
   },
   {
@@ -44,7 +49,8 @@
     "pk": 6,
     "fields": {
       "first_name": "Steven",
-      "last_name": "Morrissey"
+      "last_name": "Morrissey",
+      "wedding": 1
     }
   },
   {
@@ -52,7 +58,8 @@
     "pk": 7,
     "fields": {
       "first_name": "Pat",
-      "last_name": "Benetar"
+      "last_name": "Benetar",
+      "wedding": 1
     }
   },
   {
@@ -60,7 +67,8 @@
     "pk": 8,
     "fields": {
       "first_name": "Corey",
-      "last_name": "Glover"
+      "last_name": "Glover",
+      "wedding": 1
     }
   }
 ]
