@@ -12,3 +12,7 @@ class Guest(models.Model):
     @seated.setter
     def seated(self, value):
         self.__seated = value
+        
+    @property
+    def full_name(self):
+        return f'{self.first_name} {self.last_name}'

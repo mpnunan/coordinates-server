@@ -17,7 +17,7 @@ from django.conf.urls import include
 from rest_framework import routers
 from django.contrib import admin
 from django.urls import path
-from coordinatesapi.views import WeddingView, GuestView, ReceptionTableView
+from coordinatesapi.views import WeddingView, GuestView, ReceptionTableView, check_user, register_user
 
 router=routers.DefaultRouter(trailing_slash=False)
 router.register(r'weddings', WeddingView, 'wedding')
@@ -27,4 +27,6 @@ router.register(r'reception_tables', ReceptionTableView, 'reception_table')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
+    path('register', register_user),
+    path('checkuser', check_user),
 ]
