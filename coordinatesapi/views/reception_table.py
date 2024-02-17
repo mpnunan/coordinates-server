@@ -11,6 +11,11 @@ class ReceptionTableView(ViewSet):
     def retrieve(self, request, pk):
         try:
             reception_table = ReceptionTable.objects.get(pk=pk)
+            
+            reception_table.full = len(TableGuest.objects.filter(
+                reception_table_id=reception_table
+            )) > reception_table.capacity
+            
             serializer = ReceptionTableSerializer(reception_table)
             return Response(serializer.data)
         except ReceptionTable.DoesNotExist as ex:
@@ -18,6 +23,12 @@ class ReceptionTableView(ViewSet):
     
     def list(self, request):
         reception_tables = ReceptionTable.objects.all()
+        
+        for reception_table in reception_tables:
+            reception_table.full = len(TableGuest.objects.filter(
+                reception_table_id=reception_table
+            )) > reception_table.capacity
+        
         serializer = ReceptionTableSerializerShallow(reception_tables, many=True)
         return Response(serializer.data)
     
@@ -72,10 +83,10 @@ class ReceptionTableSerializer(serializers.ModelSerializer):
         return [{guest_table.guest.full_name} for guest_table in TableGuest.objects.filter(reception_table=obj)]
     class Meta:
         model = ReceptionTable
-        fields = ('id', 'wedding', 'number', 'capacity', 'guests')
+        fields = ('id', 'wedding', 'number', 'capacity', 'guests', 'full')
         depth = 2
         
 class ReceptionTableSerializerShallow(serializers.ModelSerializer):
     class Meta:
         model = ReceptionTable
-        fields = ('id', 'wedding', 'number', 'capacity')
+        fields = ('id', 'wedding', 'number', 'capacity', 'full')

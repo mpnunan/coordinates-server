@@ -2,7 +2,7 @@ from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
-from coordinatesapi.models import Guest
+from coordinatesapi.models import Guest, TableGuest
 
 
 class GuestView(ViewSet):
@@ -10,6 +10,11 @@ class GuestView(ViewSet):
     def retrieve(self, request, pk):
         try:
             guest = Guest.objects.get(pk=pk)
+            
+            guest.seated = len(TableGuest.objects.filter(
+                guest_id=guest
+            )) > 0
+            
             serializer = GuestSerializer(guest)
             return Response(serializer.data)
         except Guest.DoesNotExist as ex:
@@ -17,6 +22,12 @@ class GuestView(ViewSet):
     
     def list(self, request):
         guests = Guest.objects.all()
+        
+        for guest in guests:
+            guest.seated = len(TableGuest.objects.filter(
+                guest_id=guest
+            )) > 0
+        
         serializer = GuestSerializer(guests, many=True)
         return Response(serializer.data)
     
@@ -43,4 +54,4 @@ class GuestView(ViewSet):
 class GuestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Guest
-        fields = ('id', 'first_name', 'last_name')
+        fields = ('id', 'first_name', 'last_name', 'seated')
