@@ -55,9 +55,14 @@ class WeddingView(ViewSet):
         return Response(None, status=status.HTTP_204_NO_CONTENT)
     
     def destroy(self, request, pk):
-        wedding = Wedding.objects.get(pk=pk)
-        wedding.delete()
-        return Response(None, status=status.HTTP_204_NO_CONTENT)
+        uid = request.META['HTTP_Authorization']
+        try:
+            planner = Planner.objects.get(uid=uid)
+            wedding = Wedding.objects.filter(pk=pk, planner_id=planner)
+            wedding.delete()
+            return Response(None, status=status.HTTP_204_NO_CONTENT)
+        except Planner.DoesNotExist:
+            return Response({'message': 'Not Authorized'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class WeddingSerializer(serializers.ModelSerializer):
     class Meta:
