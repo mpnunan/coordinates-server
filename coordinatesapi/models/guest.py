@@ -7,6 +7,10 @@ class Guest(models.Model):
     last_name = models.CharField(max_length=20)
     wedding = models.ForeignKey(Wedding, on_delete=models.CASCADE, related_name='guests')
     
+    def table_number(self):
+        for table_guest in self.table_guests.all():
+            return table_guest.reception_table.number
+    
     @property
     def seated(self):
         return self.__seated
