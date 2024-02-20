@@ -69,7 +69,7 @@ class ReceptionTableView(ViewSet):
           reception_table=reception_table,
           guest=guest,
         )
-        return Response({'message': 'Item added'}, status=status.HTTP_201_CREATED)
+        return Response({'message': 'Guest added'}, status=status.HTTP_201_CREATED)
       
     @action(methods=['put'], detail=True)
     def remove_guest(self, request, pk):
@@ -80,18 +80,27 @@ class ReceptionTableView(ViewSet):
           guest=guest,
         )
         table_guest.delete()
-        return Response(None, status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': 'Guest Removed'}, status=status.HTTP_204_NO_CONTENT)
+
+class TableGuestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Guest
+        fields = ('id', 'full_name')
+
+class OpenGuestSerializer(serializers.ModelSerializer):
+    table_number = serializers.IntegerField(default=None)
+    class Meta:
+        model = Guest
+        fields = ('id', 'full_name', 'table_number')
 
 class ReceptionTableSerializer(serializers.ModelSerializer):
-    guests = serializers.SerializerMethodField()
-    def get_guests(self, obj):
-        return [{guest_table.guest.full_name} for guest_table in TableGuest.objects.filter(reception_table=obj)]
+    guests = TableGuestSerializer(many=True, read_only=True)
     class Meta:
         model = ReceptionTable
-        fields = ('id', 'wedding', 'number', 'capacity', 'guests', 'full')
-        depth = 2
+        fields = ('id', 'wedding_id', 'number', 'capacity', 'guests', 'full')
         
 class ReceptionTableSerializerShallow(serializers.ModelSerializer):
+    guests = TableGuestSerializer(many=True, read_only=True)
     class Meta:
         model = ReceptionTable
-        fields = ('id', 'wedding', 'number', 'capacity', 'full')
+        fields = ('id', 'number', 'capacity', 'guests', 'full')

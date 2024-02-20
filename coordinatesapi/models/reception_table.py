@@ -7,6 +7,9 @@ class ReceptionTable(models.Model):
     number = models.IntegerField()
     capacity = models.IntegerField()
     
+    def guests(self):
+        return [guest_table.guest for guest_table in self.guest_tables.all()]  
+    
     @property
     def full(self):
         return self.__full
@@ -14,3 +17,5 @@ class ReceptionTable(models.Model):
     @full.setter
     def full(self, value):
         self.__full = value
+
+    
