@@ -36,26 +36,27 @@ class WeddingView(ViewSet):
             return Response({'message': 'Not Authorized'}, status=status.HTTP_401_UNAUTHORIZED)
             
     def create(self, request):
-        planner = Planner.objects.get(uid=request.data["planner"])
+        planner = Planner.objects.get(uid=request.META['HTTP_AUTHORIZATION'])
         wedding = Wedding.objects.create(
-            venue=request.data["name"],
-            name=request.data["email"],
+            venue=request.data["venue"],
+            name=request.data["name"],
             planner=planner
         )
         serializer = WeddingSerializerShallow(wedding)
         return Response(serializer.data)
     
     def update(self, request, pk):
-        planner = Planner.objects.get(uid=request.data["planner"])
+        planner = Planner.objects.get(uid=request.META['HTTP_AUTHORIZATION'])
         wedding = Wedding.objects.get(pk=pk)
         wedding.venue=request.data["venue"]
         wedding.name=request.data["name"]
         wedding.planner=planner
         wedding.save()
-        return Response(None, status=status.HTTP_204_NO_CONTENT)
+        serializer = UpdateSerializer(wedding)
+        return Response(serializer.data)
     
     def destroy(self, request, pk):
-        uid = request.META['HTTP_Authorization']
+        uid=request.META['HTTP_AUTHORIZATION']
         try:
             planner = Planner.objects.get(uid=uid)
             wedding = Wedding.objects.filter(pk=pk, planner_id=planner)
@@ -74,3 +75,8 @@ class WeddingSerializerShallow(serializers.ModelSerializer):
     class Meta:
         model = Wedding
         fields = ('id', 'venue', 'name', 'planner')
+        
+class UpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Wedding
+        fields = ('id', 'name')
