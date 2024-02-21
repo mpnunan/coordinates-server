@@ -72,4 +72,4 @@ class GuestSerializer(serializers.ModelSerializer):
     table_number = serializers.IntegerField(default=None)
     class Meta:
         model = Guest
-        fields = ('id', 'first_name', 'last_name', 'wedding', 'table_number', 'seated')
+        fields = ('id', 'first_name', 'last_name', 'wedding_id', 'table_number', 'seated')
