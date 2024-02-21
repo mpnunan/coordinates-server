@@ -41,7 +41,7 @@ class ReceptionTableView(ViewSet):
         wedding = Wedding.objects.get(pk=request.data["wedding"])
         reception_table = ReceptionTable.objects.create(
             wedding=wedding,
-            nunmber=request.data["number"],
+            number=request.data["number"],
             capacity=request.data["capacity"]
         )
         serializer = ReceptionTableSerializerShallow(reception_table)
