@@ -1,0 +1,9 @@
+[
+  {
+    "model": "coordinatesapi.group",
+    "pk": 1,
+    "fields": {
+      "name": "The first Group"
+    }
+  }
+]

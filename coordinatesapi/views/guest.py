@@ -3,6 +3,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
 from coordinatesapi.models import Guest, TableGuest, Wedding, ReceptionTable
+from coordinatesapi.serializers import GroupSerializer
 
 
 class GuestView(ViewSet):
@@ -64,12 +65,14 @@ class GuestView(ViewSet):
 
 class GuestSerializerShallow(serializers.ModelSerializer):
     table_number = serializers.IntegerField(default=None)
+    group = GroupSerializer(read_only=True)
     class Meta:
         model = Guest
-        fields = ('id', 'full_name', 'table_number', 'seated')
+        fields = ('id', 'full_name', 'table_number', 'group', 'seated')
         
 class GuestSerializer(serializers.ModelSerializer):
     table_number = serializers.IntegerField(default=None)
+    group = GroupSerializer(read_only=True)
     class Meta:
         model = Guest
-        fields = ('id', 'first_name', 'last_name', 'wedding_id', 'table_number', 'seated')
+        fields = ('id', 'first_name', 'last_name', 'wedding_id', 'table_number', 'group', 'seated')
