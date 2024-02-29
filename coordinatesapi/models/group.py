@@ -1,6 +1,7 @@
 from django.db import models
 
 class Group(models.Model):
+    uuid = models. UUIDField()
     name = models.CharField(max_length=50)
 
     def guests(self):
