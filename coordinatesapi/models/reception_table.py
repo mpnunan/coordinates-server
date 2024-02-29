@@ -3,7 +3,8 @@ from .wedding import Wedding
 
 class ReceptionTable(models.Model):
   
-    wedding = models.ForeignKey(Wedding, on_delete=models.CASCADE)
+    uuid = models.UUIDField()
+    wedding = models.ForeignKey(Wedding, on_delete=models.CASCADE, related_name='reception_tables')
     number = models.IntegerField()
     capacity = models.IntegerField()
     

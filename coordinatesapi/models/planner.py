@@ -7,3 +7,7 @@ class Planner(models.Model):
     email = models.EmailField()
     phone_number = models.IntegerField()
     uid = models.CharField(max_length=50)
+    
+    @property
+    def full_name(self):
+        return f'{self.first_name} {self.last_name}'
