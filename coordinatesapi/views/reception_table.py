@@ -10,9 +10,9 @@ import uuid
 
 class ReceptionTableView(ViewSet):
 
-    def retrieve(self, request, string):
+    def retrieve(self, request, pk):
         try:
-            reception_table = ReceptionTable.objects.get(uuid=string)
+            reception_table = ReceptionTable.objects.get(uuid=pk)
             
             reception_table.full = len(TableGuest.objects.filter(
                 reception_table_id=reception_table
@@ -34,23 +34,23 @@ class ReceptionTableView(ViewSet):
         serializer = ReceptionTableSerializerShallow(reception_table)
         return Response(serializer.data)
     
-    def update(self, request, string):
+    def update(self, request, pk):
         wedding = Wedding.objects.get(pk=request.data["wedding"])
-        reception_table = ReceptionTable.objects.get(uuid=string)
+        reception_table = ReceptionTable.objects.get(uuid=pk)
         reception_table.wedding=wedding
         reception_table.number=request.data["number"]
         reception_table.capacity=request.data["capacity"]
         reception_table.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
     
-    def destroy(self, request, string):
-        reception_table = ReceptionTable.objects.get(uuid=string)
+    def destroy(self, request, pk):
+        reception_table = ReceptionTable.objects.get(uuid=pk)
         reception_table.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
       
     @action(methods=['post'], detail=True)
-    def add_guest(self, request, string):
-        reception_table=ReceptionTable.objects.get(uuid=string)
+    def add_guest(self, request, pk):
+        reception_table=ReceptionTable.objects.get(uuid=pk)
         guest=Guest.objects.get(uuid=request.data["guest"])
         table_guest = TableGuest.objects.create(
           reception_table=reception_table,
@@ -59,8 +59,8 @@ class ReceptionTableView(ViewSet):
         return Response({'message': 'Guest added'}, status=status.HTTP_201_CREATED)
       
     @action(methods=['put'], detail=True)
-    def remove_guest(self, request, string):
-        reception_table=ReceptionTable.objects.get(uuid=string)
+    def remove_guest(self, request, pk):
+        reception_table=ReceptionTable.objects.get(uuid=pk)
         guest=Guest.objects.get(uuid=request.data["guest"])
         table_guest = TableGuest.objects.filter(
           reception_table=reception_table,

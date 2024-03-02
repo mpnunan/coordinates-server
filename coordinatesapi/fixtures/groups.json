@@ -4,7 +4,8 @@
     "pk": 1,
     "fields": {
       "uuid": "283b2864-45e9-41fc-9c61-12725d8844c8",
-      "name": "The first Group"
+      "name": "The first Group",
+      "wedding": 1
     }
   }
 ]
