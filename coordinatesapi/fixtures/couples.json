@@ -1,0 +1,10 @@
+[
+  {
+    "model": "coordinatesapi.couple",
+    "pk": 1,
+    "fields": {
+      "first_guest": 1,
+      "second_guest": 8
+    }
+  }
+]

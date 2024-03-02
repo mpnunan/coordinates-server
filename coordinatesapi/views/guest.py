@@ -9,9 +9,9 @@ import uuid
 
 class GuestView(ViewSet):
 
-    def retrieve(self, request, pk):
+    def retrieve(self, request, string):
         try:
-            guest = Guest.objects.get(pk=pk)
+            guest = Guest.objects.get(uuid=string)
             
             guest.seated = len(TableGuest.objects.filter(
                 guest_id=guest
@@ -33,16 +33,16 @@ class GuestView(ViewSet):
         serializer = GuestSerializerShallow(guest)
         return Response(serializer.data)
     
-    def update(self, request, pk):
+    def update(self, request, string):
         wedding = Wedding.objects.get(pk=request.data["wedding"])
-        guest = Guest.objects.get(pk=pk)
+        guest = Guest.objects.get(uuid=string)
         guest.first_name=request.data["firstName"]
         guest.last_name=request.data["lastName"]
         guest.wedding=wedding
         guest.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
     
-    def destroy(self, request, pk):
-        guest = Guest.objects.get(pk=pk)
+    def destroy(self, request, string):
+        guest = Guest.objects.get(uuid=string)
         guest.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)

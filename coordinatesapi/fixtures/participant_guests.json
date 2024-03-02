@@ -1,0 +1,72 @@
+[
+  {
+    "model": "coordinatesapi.participantguest",
+    "pk": 1,
+    "fields": {
+      "guest": 1,
+      "participant": 1,
+      "party": true,
+      "primary": true
+    }
+  },
+  {
+    "model": "coordinatesapi.participantguest",
+    "pk": 2,
+    "fields": {
+      "guest": 2,
+      "participant": 2
+    }
+  },
+  {
+    "model": "coordinatesapi.participantguest",
+    "pk": 3,
+    "fields": {
+      "guest": 3,
+      "participant": 1
+    }
+  },
+  {
+    "model": "coordinatesapi.participantguest",
+    "pk": 4,
+    "fields": {
+      "guest": 4,
+      "participant": 2
+    }
+  },
+  {
+    "model": "coordinatesapi.participantguest",
+    "pk": 5,
+    "fields": {
+      "guest": 5,
+      "participant": 1
+    }
+  },
+  {
+    "model": "coordinatesapi.participantguest",
+    "pk": 6,
+    "fields": {
+      "guest": 6,
+      "participant": 2,
+      "party": true
+    }
+  },
+  {
+    "model": "coordinatesapi.participantguest",
+    "pk": 7,
+    "fields": {
+      "guest": 7,
+      "participant": 1,
+      "family": true
+    }
+  },
+  {
+    "model": "coordinatesapi.participantguest",
+    "pk": 8,
+    "fields": {
+      "guest": 8,
+      "participant": 2,
+      "party": true,
+      "primary": true
+    }
+  }
+]

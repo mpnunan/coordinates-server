@@ -1,0 +1,20 @@
+[
+  {
+    "model": "coordinatesapi.problem",
+    "pk": 1,
+    "fields": {
+      "first_guest": 2,
+      "second_guest": 5,
+      "notes": "Absolutely not"
+    }
+  },
+  {
+    "model": "coordinatesapi.problem",
+    "pk": 2,
+    "fields": {
+      "first_guest": 3,
+      "second_guest": 4,
+      "notes": "Bad idea"
+    }
+  }
+]
