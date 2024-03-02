@@ -7,7 +7,7 @@ from coordinatesapi.serializers import GroupSerializer
 import uuid
 
 
-class GuestView(ViewSet):
+class GroupView(ViewSet):
 
     def retrieve(self, request, pk):
         try:

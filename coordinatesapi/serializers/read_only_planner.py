@@ -1,5 +1,11 @@
 from rest_framework import serializers
-from coordinatesapi.models import Wedding, WeddingPlanner, Guest, Group, ReceptionTable
+from coordinatesapi.models import Wedding, WeddingPlanner, Guest, Group, ReceptionTable, Participant
+
+class ReadOnlyParticipantSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Participant
+        fields = ('id', 'full_name')
+
 
 class WeddingPlannerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,18 +15,31 @@ class WeddingPlannerSerializer(serializers.ModelSerializer):
 
 class ReadOnlyWeddingSerializer(serializers.ModelSerializer):
     planners = WeddingPlannerSerializer(many=True, read_only=True)
+    participants = ReadOnlyParticipantSerializer(many=True, read_only=True)
     class Meta:
         model = Wedding
-        fields = ('id', 'venue', 'name', 'planners')
+        fields = ('id', 'venue', 'name', 'participants', 'planners')
+        
+class ReadOnlyGroupGuestSerializer(serializers.ModelSerializer):
+    table_number = serializers.IntegerField(default=None)
+    class Meta:
+        model = Guest
+        fields = ('id', 'full_name', 'table_number')
 
 class ReadOnlyGroupSerializer(serializers.ModelSerializer):
+    guests = ReadOnlyGroupGuestSerializer(many=True, read_only=True)
+    class Meta:
+        model = Group
+        fields = ('id', 'name', 'guests')
+
+class ReadOnlyLimitedGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ('id', 'name')
 
 class ReadOnlyGuestSerializer(serializers.ModelSerializer):
     table_number = serializers.IntegerField(default=None)
-    group = ReadOnlyGroupSerializer(read_only=True)
+    group = ReadOnlyLimitedGroupSerializer(read_only=True)
     class Meta:
         model = Guest
         fields = ('id', 'full_name', 'table_number', 'group', 'seated')
@@ -35,22 +54,18 @@ class ReadOnlyReceptionTableSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReceptionTable
         fields = ('id', 'number', 'capacity', 'guests', 'full')
-        depth = 1
-
-        
+    
 class ReadOnlyGuestListSerializer(serializers.ModelSerializer):
     guests = ReadOnlyGuestSerializer(many=True, read_only=True)
     class Meta:
         model = WeddingPlanner
         fields = ('wedding_id' ,'guests')
-        depth = 1
         
 class ReadOnlyTableListSerializer(serializers.ModelSerializer):
     reception_tables = ReadOnlyReceptionTableSerializer(many=True, read_only=True)
     class Meta:
         model = WeddingPlanner
         fields = ('wedding_id' ,'reception_tables')
-        depth = 2
         
 class ReadOnlyGroupListSerializer(serializers.ModelSerializer):
     groups = ReadOnlyGroupSerializer(many=True, read_only=True)

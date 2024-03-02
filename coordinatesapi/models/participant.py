@@ -11,4 +11,10 @@ class Participant(models.Model):
     uuid = models.UUIDField()
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    wedding = models.ForeignKey(Wedding, on_delete=models.CASCADE)
+    wedding = models.ForeignKey(Wedding, on_delete=models.CASCADE, related_name='participants')
+    
+    @property
+    def full_name(self):
+        '''Returns full name of participant for use
+        in serializers that don't requre more detail'''
+        return f'{self.first_name} {self.last_name}'

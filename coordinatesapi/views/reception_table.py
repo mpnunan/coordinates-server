@@ -52,7 +52,7 @@ class ReceptionTableView(ViewSet):
     def add_guest(self, request, pk):
         reception_table=ReceptionTable.objects.get(uuid=pk)
         guest=Guest.objects.get(uuid=request.data["guest"])
-        table_guest = TableGuest.objects.create(
+        TableGuest.objects.create(
           reception_table=reception_table,
           guest=guest,
         )

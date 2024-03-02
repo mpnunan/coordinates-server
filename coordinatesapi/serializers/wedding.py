@@ -4,12 +4,14 @@ from .guest import GuestSerializerShallow
 from .planner import WeddingPlannerSerializer
 from .reception_table import ReceptionTableSerializer
 from .group import GroupSerializer
+from .participant import ParticipantSerializer
 
 class WeddingSerializer(serializers.ModelSerializer):
     planners = WeddingPlannerSerializer(many=True, read_only=True)
+    participants = ParticipantSerializer(many=True, read_only=True)
     class Meta:
         model = Wedding
-        fields = ('id', 'uuid', 'venue', 'name', 'planners')
+        fields = ('id', 'uuid', 'venue', 'name', 'participants', 'planners')
 
 class WeddingSerializerShallow(serializers.ModelSerializer):
     class Meta:

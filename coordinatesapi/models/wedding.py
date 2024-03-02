@@ -25,3 +25,7 @@ class Wedding(models.Model):
     def groups(self):
         '''returns all groups related to this wedding'''
         return [group.self for group in self.groups.all()]
+    
+    def participants(self):
+        '''returns all groups related to this wedding'''
+        return [participant.self for participant in self.participants.all()]
