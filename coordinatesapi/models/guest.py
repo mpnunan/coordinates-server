@@ -15,10 +15,16 @@ class Guest(models.Model):
     wedding = models.ForeignKey(Wedding, on_delete=models.CASCADE, related_name='guests')
 
     def table_number(self):
+        '''If guest is on table_guest join table,
+        this returns teh number of the related
+        reception_table'''
         for table_guest in self.table_guests.all():
             return table_guest.reception_table.number
 
     def group(self):
+        '''If a guest is on the group_guest
+        join table, this returns the group dictionary,
+        otherwise it returns null'''
         for group_guest in self.group_guests.all():
             try:
                 group = group_guest.group
