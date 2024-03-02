@@ -4,4 +4,4 @@ from coordinatesapi.models import Group
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
-        fields = ('id', 'name')
+        fields = ('id', 'uuid', 'name')

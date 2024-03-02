@@ -6,6 +6,7 @@ class Wedding(models.Model):
     through the wedding_planner join table.
     Read_only list serializers are used for wedding_planners
     with the read_only boolean set True'''
+    uuid = models.UUIDField()
     venue = models.CharField(max_length=50)
     name = models.CharField(max_length=50)
 

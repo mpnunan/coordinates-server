@@ -2,8 +2,8 @@ from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from coordinatesapi.models import Guest, TableGuest, Wedding
-from coordinatesapi.serializers import GuestSerializer, GuestSerializerShallow
+from coordinatesapi.models import Group, Wedding
+from coordinatesapi.serializers import GroupSerializer
 import uuid
 
 
@@ -11,38 +11,31 @@ class GuestView(ViewSet):
 
     def retrieve(self, request, pk):
         try:
-            guest = Guest.objects.get(uuid=pk)
-            
-            guest.seated = len(TableGuest.objects.filter(
-                guest_id=guest
-            )) > 0
-            
-            serializer = GuestSerializer(guest)
+            group = Group.objects.get(uuid=pk)
+            serializer = GroupSerializer(group)
             return Response(serializer.data)
-        except Guest.DoesNotExist as ex:
+        except Group.DoesNotExist as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
     
     def create(self, request):
         wedding = Wedding.objects.get(pk=request.data["wedding"])
-        guest = Guest.objects.create(
+        group = Group.objects.create(
             uuid=uuid.uuid4(),
-            first_name=request.data["firstName"],
-            last_name=request.data["lastName"],
+            name=request.data["name"],
             wedding=wedding,
         )
-        serializer = GuestSerializerShallow(guest)
+        serializer = GroupSerializer(group)
         return Response(serializer.data)
     
     def update(self, request, pk):
         wedding = Wedding.objects.get(pk=request.data["wedding"])
-        guest = Guest.objects.get(uuid=pk)
-        guest.first_name=request.data["firstName"]
-        guest.last_name=request.data["lastName"]
-        guest.wedding=wedding
-        guest.save()
+        group = Group.objects.get(uuid=pk)
+        group.name=request.data["name"]
+        group.wedding=wedding
+        group.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
     
     def destroy(self, request, pk):
-        guest = Guest.objects.get(uuid=pk)
-        guest.delete()
+        group = Group.objects.get(uuid=pk)
+        group.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)

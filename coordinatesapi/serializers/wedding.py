@@ -3,12 +3,13 @@ from coordinatesapi.models import Wedding, WeddingPlanner
 from .guest import GuestSerializerShallow
 from .planner import WeddingPlannerSerializer
 from .reception_table import ReceptionTableSerializer
+from .group import GroupSerializer
 
 class WeddingSerializer(serializers.ModelSerializer):
     planners = WeddingPlannerSerializer(many=True, read_only=True)
     class Meta:
         model = Wedding
-        fields = ('id', 'venue', 'name', 'planners')
+        fields = ('id', 'uuid', 'venue', 'name', 'planners')
 
 class WeddingSerializerShallow(serializers.ModelSerializer):
     class Meta:
@@ -21,6 +22,7 @@ class WeddingUpdateSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
         
 class PlannerWeddingSerializer(serializers.ModelSerializer):
+    wedding = WeddingSerializerShallow(read_only=True)
     class Meta:
         model = WeddingPlanner
         fields = ('wedding', 'planner_id')
@@ -31,11 +33,15 @@ class GuestListSerializer(serializers.ModelSerializer):
     class Meta:
         model = WeddingPlanner
         fields = ('wedding_id' ,'guests')
-        depth = 1
         
 class TableListSerializer(serializers.ModelSerializer):
     reception_tables = ReceptionTableSerializer(many=True, read_only=True)
     class Meta:
         model = WeddingPlanner
         fields = ('wedding_id' ,'reception_tables')
-        depth = 2
+
+class GroupListSerializer(serializers.ModelSerializer):
+    groups = GroupSerializer(many=True, read_only=True)
+    class Meta:
+        model = WeddingPlanner
+        fields = ('wedding_id' ,'groups')

@@ -3,6 +3,7 @@
     "model": "coordinatesapi.wedding",
     "pk": 1,
     "fields": {
+      "uuid": "da0ed4f7-5491-458e-aa3c-bdf9790d2cf7",
       "venue": "The Eighties",
       "name": "The Synth Wedding"
     }
@@ -11,6 +12,7 @@
     "model": "coordinatesapi.wedding",
     "pk": 2,
     "fields": {
+      "uuid": "7bac2a25-1971-4c58-8e3e-4e1876c83793",
       "venue": "The Evil Eighties",
       "name": "The Evil Synth Wedding"
     }
