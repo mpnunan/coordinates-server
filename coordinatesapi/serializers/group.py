@@ -12,3 +12,8 @@ class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ('id', 'uuid', 'name', 'guests')
+
+class GroupSerializerShallow(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ('id', 'uuid', 'name')

@@ -25,6 +25,7 @@ router.register(r'guests', GuestView, 'guest')
 router.register(r'reception_tables', ReceptionTableView, 'reception_table')
 router.register(r'planners', PlannerView, 'planner')
 router.register(r'groups', GroupView, 'group')
+# router.register(r'guest_list', GuestListView, 'guest_list')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

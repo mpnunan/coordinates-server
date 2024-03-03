@@ -10,6 +10,7 @@ class Wedding(models.Model):
     venue = models.CharField(max_length=50)
     name = models.CharField(max_length=50)
 
+    @property
     def guests(self):
         '''Returns all guests related to this wedding'''
         return [guest.self for guest in self.guests.all()]

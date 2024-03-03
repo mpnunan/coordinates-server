@@ -31,6 +31,11 @@ class ReadOnlyGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ('id', 'name', 'guests')
+        
+class ReadOnlyGroupSerializerShallow(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ('id', 'uuid', 'name')
 
 class ReadOnlyLimitedGroupSerializer(serializers.ModelSerializer):
     class Meta:
@@ -72,3 +77,18 @@ class ReadOnlyGroupListSerializer(serializers.ModelSerializer):
     class Meta:
         model = WeddingPlanner
         fields = ('wedding_id' ,'groups')
+
+class ReadOnlyGuestSerializerShallow(serializers.ModelSerializer):
+    table_number = serializers.IntegerField(default=None)
+    group = ReadOnlyGroupSerializer(read_only=True)
+    class Meta:
+        model = Guest
+        fields = ('id', 'full_name', 'table_number', 'group')
+
+class ReadOnlyCoupleSerializer(serializers.ModelSerializer):
+    table_number = serializers.IntegerField(default=None)
+    group = ReadOnlyGroupSerializerShallow(read_only=True)
+    partner = ReadOnlyGuestSerializerShallow(read_only=True)
+    class Meta:
+        model = Guest
+        fields = ('id', 'uuid', 'full_name', 'table_number', 'group', 'partner')

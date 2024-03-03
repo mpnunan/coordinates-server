@@ -57,3 +57,19 @@ class Guest(models.Model):
         '''Returns full name of guest for use
         in serializers that don't requre more detail'''
         return f'{self.first_name} {self.last_name}'
+    
+    @property
+    def partner(self):
+        return self.__partner
+
+    @partner.setter
+    def partner(self, value):
+        self.__partner = value
+    
+    @property
+    def problem_pairing(self):
+        return self.__problem_pairing
+    
+    @problem_pairing.setter
+    def problem_pairing(self, value):
+        self.__problem_pairing = value
