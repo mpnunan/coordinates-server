@@ -73,3 +73,27 @@ class Guest(models.Model):
     @problem_pairing.setter
     def problem_pairing(self, value):
         self.__problem_pairing = value
+        
+    @property
+    def family(self):
+        return self.__family
+
+    @family.setter
+    def family(self, value):
+        self.__family = value
+    
+    @property
+    def party(self):
+        return self.__party
+
+    @party.setter
+    def party(self, value):
+        self.__party = value
+        
+    @property
+    def primary(self):
+        return self.__primary
+
+    @primary.setter
+    def primary(self, value):
+        self.__primary = value

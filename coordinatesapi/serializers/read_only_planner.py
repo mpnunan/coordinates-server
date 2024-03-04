@@ -92,3 +92,17 @@ class ReadOnlyCoupleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Guest
         fields = ('id', 'uuid', 'full_name', 'table_number', 'group', 'partner')
+
+class ReadOnlyNestedGuestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Guest
+        fields = ('id', 'full_name')
+
+class ReadOnlySortedGuestSerializer(serializers.ModelSerializer):
+    table_number = serializers.IntegerField(default=None)
+    group = ReadOnlyGroupSerializerShallow(read_only=True)
+    partner = ReadOnlyNestedGuestSerializer(read_only=True)
+    problem_pairing = ReadOnlyNestedGuestSerializer(read_only=True)
+    class Meta:
+        model = Guest
+        fields = ('id', 'uuid', 'full_name', 'table_number', 'group', 'family', 'party', 'primary', 'seated', 'partner', 'problem_pairing')

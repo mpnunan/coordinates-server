@@ -18,3 +18,8 @@ class Participant(models.Model):
         '''Returns full name of participant for use
         in serializers that don't requre more detail'''
         return f'{self.first_name} {self.last_name}'
+    
+    def guests(self):
+        '''Returns all guests related to this participant'''  
+        return [guest_participant.guest for guest_participant in self.guest_participants.all()]
+            
