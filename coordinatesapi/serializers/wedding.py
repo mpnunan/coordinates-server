@@ -5,6 +5,7 @@ from .planner import WeddingPlannerSerializer
 from .reception_table import ReceptionTableSerializer
 from .group import GroupSerializer
 from .participant import ParticipantSerializer
+from .guest_list import SortedGuestListSerializer
 
 class WeddingSerializer(serializers.ModelSerializer):
     planners = WeddingPlannerSerializer(many=True, read_only=True)
@@ -31,7 +32,7 @@ class PlannerWeddingSerializer(serializers.ModelSerializer):
         depth = 1
         
 class GuestListSerializer(serializers.ModelSerializer):
-    guests = GuestSerializerShallow(many=True, read_only=True)
+    guests = SortedGuestListSerializer(many=True, read_only=True)
     class Meta:
         model = WeddingPlanner
         fields = ('wedding_id' ,'guests')

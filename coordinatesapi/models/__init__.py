@@ -4,7 +4,6 @@ from .wedding import Wedding
 from .reception_table import ReceptionTable
 from .table_guest import TableGuest
 from .participant import Participant
-from .participant_guest import ParticipantGuest
 from .couple import Couple
 from .problem import Problem
 from .wedding_planner import WeddingPlanner

@@ -1,7 +1,7 @@
 '''Wedding guests'''
 from django.db import models
 from .wedding import Wedding
-
+from .participant import Participant
 class Guest(models.Model):
     '''Wedding guests.
     List views only accessible through the wedding_planner join table.
@@ -13,6 +13,10 @@ class Guest(models.Model):
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     wedding = models.ForeignKey(Wedding, on_delete=models.CASCADE, related_name='guests')
+    participant = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name='participants')
+    family = models.BooleanField(default=False)
+    party = models.BooleanField(default=False)
+    primary = models.BooleanField(default=False)
 
     def table_number(self):
         '''If guest is on table_guest join table,
@@ -67,33 +71,9 @@ class Guest(models.Model):
         self.__partner = value
     
     @property
-    def problem_pairing(self):
-        return self.__problem_pairing
+    def problem(self):
+        return self.__problem
     
-    @problem_pairing.setter
-    def problem_pairing(self, value):
-        self.__problem_pairing = value
-        
-    @property
-    def family(self):
-        return self.__family
-
-    @family.setter
-    def family(self, value):
-        self.__family = value
-    
-    @property
-    def party(self):
-        return self.__party
-
-    @party.setter
-    def party(self, value):
-        self.__party = value
-        
-    @property
-    def primary(self):
-        return self.__primary
-
-    @primary.setter
-    def primary(self, value):
-        self.__primary = value
+    @problem.setter
+    def problem(self, value):
+        self.__problem = value

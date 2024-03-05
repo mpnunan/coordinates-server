@@ -6,7 +6,11 @@
       "uuid": "d72bae33-29c0-41d1-beb4-1ef8f64fe0db",
       "first_name": "Debbie",
       "last_name": "Harry",
-      "wedding": 1
+      "wedding": 1,
+      "participant": 1,
+      "party": true,
+      "family": false,
+      "primary": true
     }
   },
   {
@@ -16,7 +20,11 @@
       "uuid": "bfaea5c7-f487-4883-afca-73be70bd94b9",
       "first_name": "Robert",
       "last_name": "Smith",
-      "wedding": 1
+      "wedding": 1,
+      "participant": 1,
+      "party": false,
+      "family": true,
+      "primary": false
     }
   },
   {
@@ -26,7 +34,11 @@
       "uuid": "208a5760-1117-40cc-b9f3-0585a129eba9",
       "first_name": "Kate",
       "last_name": "Bush",
-      "wedding": 1
+      "wedding": 1,
+      "participant": 2,
+      "party": true,
+      "family": true,
+      "primary": false
     }
   },
   {
@@ -36,7 +48,11 @@
       "uuid": "0b773580-db40-4976-823a-3d62616f4a5a",
       "first_name": "Michael",
       "last_name": "Stipe",
-      "wedding": 1
+      "wedding": 1,
+      "participant": 2,
+      "party": true,
+      "family": false,
+      "primary": true
     }
   },
   {
@@ -46,7 +62,11 @@
       "uuid": "d5185ac0-6574-4f5e-a53f-1630f5e2c5a3",
       "first_name": "Stevie",
       "last_name": "Knicks",
-      "wedding": 1
+      "wedding": 1,
+      "participant": 1,
+      "party": true,
+      "family": true,
+      "primary": false
     }
   },
   {
@@ -56,7 +76,11 @@
       "uuid": "da3a80a1-4930-4bd1-be54-cbf424f99560",
       "first_name": "Steven",
       "last_name": "Morrissey",
-      "wedding": 1
+      "wedding": 1,
+      "participant": 1,
+      "party": false,
+      "family": false,
+      "primary": false
     }
   },
   {
@@ -66,7 +90,11 @@
       "uuid": "a7d1d2e6-9483-4b8f-b574-54781fe829db",
       "first_name": "Pat",
       "last_name": "Benetar",
-      "wedding": 1
+      "wedding": 1,
+      "participant": 2,
+      "party": false,
+      "family": false,
+      "primary": false
     }
   },
   {
@@ -76,7 +104,11 @@
       "uuid": "2948603a-7e20-4737-9591-01904103f372",
       "first_name": "Corey",
       "last_name": "Glover",
-      "wedding": 1
+      "wedding": 1,
+      "participant": 2,
+      "party": false,
+      "family": false,
+      "primary": false
     }
   }
 ]

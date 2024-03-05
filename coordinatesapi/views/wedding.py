@@ -2,7 +2,7 @@ from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from coordinatesapi.models import Planner, Wedding, WeddingPlanner, TableGuest, Guest, ReceptionTable, Group, Couple
+from coordinatesapi.models import Planner, Wedding, WeddingPlanner, TableGuest, Guest, ReceptionTable, Group, Couple, Problem
 from coordinatesapi.serializers import WeddingSerializerShallow, WeddingUpdateSerializer, PlannerWeddingSerializer, GuestListSerializer, WeddingSerializer, TableListSerializer, ReadOnlyWeddingSerializer, ReadOnlyGuestListSerializer, ReadOnlyTableListSerializer, GroupListSerializer, ReadOnlyGroupListSerializer, CoupleSerializer
 from rest_framework.decorators import action
 import uuid
@@ -81,6 +81,16 @@ class WeddingView(ViewSet):
                 guest.seated = len(TableGuest.objects.filter(
                     guest_id=guest
                 )) > 0
+                try:
+                    couple = Couple.objects.get(first_guest=guest)
+                    guest.partner = couple.second_guest
+                except Couple.DoesNotExist:
+                    pass
+                try:
+                    problem = Problem.objects.get(first_guest=guest)
+                    guest.problem = problem.second_guest
+                except Problem.DoesNotExist:
+                    pass
             if wedding.read_only is True:
                 serializer = ReadOnlyGuestListSerializer(wedding)
             else:

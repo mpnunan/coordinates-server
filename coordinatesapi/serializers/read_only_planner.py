@@ -24,7 +24,7 @@ class ReadOnlyGroupGuestSerializer(serializers.ModelSerializer):
     table_number = serializers.IntegerField(default=None)
     class Meta:
         model = Guest
-        fields = ('id', 'full_name', 'table_number')
+        fields = ('id', 'full_name', 'seated')
 
 class ReadOnlyGroupSerializer(serializers.ModelSerializer):
     guests = ReadOnlyGroupGuestSerializer(many=True, read_only=True)
@@ -59,12 +59,6 @@ class ReadOnlyReceptionTableSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReceptionTable
         fields = ('id', 'number', 'capacity', 'guests', 'full')
-    
-class ReadOnlyGuestListSerializer(serializers.ModelSerializer):
-    guests = ReadOnlyGuestSerializer(many=True, read_only=True)
-    class Meta:
-        model = WeddingPlanner
-        fields = ('wedding_id' ,'guests')
         
 class ReadOnlyTableListSerializer(serializers.ModelSerializer):
     reception_tables = ReadOnlyReceptionTableSerializer(many=True, read_only=True)
@@ -93,16 +87,23 @@ class ReadOnlyCoupleSerializer(serializers.ModelSerializer):
         model = Guest
         fields = ('id', 'uuid', 'full_name', 'table_number', 'group', 'partner')
 
-class ReadOnlyNestedGuestSerializer(serializers.ModelSerializer):
+class ReadOnlyNestedGuestListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Guest
         fields = ('id', 'full_name')
 
-class ReadOnlySortedGuestSerializer(serializers.ModelSerializer):
+class ReadOnlySortedGuestListSerializer(serializers.ModelSerializer):
     table_number = serializers.IntegerField(default=None)
     group = ReadOnlyGroupSerializerShallow(read_only=True)
-    partner = ReadOnlyNestedGuestSerializer(read_only=True)
-    problem_pairing = ReadOnlyNestedGuestSerializer(read_only=True)
+    partner = ReadOnlyNestedGuestListSerializer(read_only=True)
+    problem_pairing = ReadOnlyNestedGuestListSerializer(read_only=True)
+    participant = ReadOnlyParticipantSerializer(read_only=True)
     class Meta:
         model = Guest
-        fields = ('id', 'uuid', 'full_name', 'table_number', 'group', 'family', 'party', 'primary', 'seated', 'partner', 'problem_pairing')
+        fields = ('id', 'uuid', 'full_name', 'participant', 'table_number', 'group', 'family', 'party', 'primary', 'seated', 'partner', 'problem')
+
+class ReadOnlyGuestListSerializer(serializers.ModelSerializer):
+    guests = ReadOnlySortedGuestListSerializer(many=True, read_only=True)
+    class Meta:
+        model = WeddingPlanner
+        fields = ('wedding_id' ,'guests')
