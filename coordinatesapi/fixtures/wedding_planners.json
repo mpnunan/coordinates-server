@@ -1,0 +1,10 @@
+[
+  {
+    "model": "coordinatesapi.weddingplanner",
+    "pk": 1,
+    "fields": {
+      "wedding": 1,
+      "planner": 1
+    }
+  }
+]

@@ -3,6 +3,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
 from coordinatesapi.models import Planner
+from coordinatesapi.serializers import PlannerDetailSerializer
 
 class PlannerView(ViewSet):
     
@@ -13,7 +14,7 @@ class PlannerView(ViewSet):
             planner = Planner.objects.get(uid=uid)
             try:
                 planner = Planner.objects.get(pk=pk)
-                serializer = PlannerSerializer(planner)
+                serializer = PlannerDetailSerializer(planner)
                 response = Response(serializer.data)
             except Planner.DoesNotExist as ex:
                 response =  Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
@@ -32,8 +33,3 @@ class PlannerView(ViewSet):
         else:
             pass
         return Response(None, status=status.HTTP_204_NO_CONTENT)
-
-class PlannerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Planner
-        fields = ('first_name', 'last_name', 'email', 'phone_number')

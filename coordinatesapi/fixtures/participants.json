@@ -1,0 +1,22 @@
+[
+  {
+    "model": "coordinatesapi.participant",
+    "pk": 1,
+    "fields": {
+      "uuid": "d581726d-726f-4a00-b3a6-0eeedb29074c",
+      "first_name": "Joseph",
+      "last_name": "Goins",
+      "wedding": 1
+    }
+  },
+  {
+    "model": "coordinatesapi.participant",
+    "pk": 2,
+    "fields": {
+      "uuid": "c1c5ad78-19bf-4865-b66c-dc9b4bb7d5a1",
+      "first_name": "Sean",
+      "last_name": "Matthews",
+      "wedding": 1
+    }
+  }
+]

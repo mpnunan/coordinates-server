@@ -1,0 +1,18 @@
+[
+  {
+    "model": "coordinatesapi.groupguest",
+    "pk": 1,
+    "fields": {
+      "group": 1,
+      "guest": 1
+    }
+  },
+  {
+    "model": "coordinatesapi.groupguest",
+    "pk": 2,
+    "fields": {
+      "group": 1,
+      "guest": 4
+    }
+  }
+]

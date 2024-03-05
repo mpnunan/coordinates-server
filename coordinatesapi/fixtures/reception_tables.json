@@ -3,6 +3,7 @@
     "model": "coordinatesapi.receptiontable",
     "pk": 1,
     "fields": {
+      "uuid": "d6d09ed6-866b-4e9c-a1b6-b28909307bdd",
       "wedding": 1,
       "number": 1,
       "capacity": 4
@@ -12,6 +13,7 @@
     "model": "coordinatesapi.receptiontable",
     "pk": 2,
     "fields": {
+      "uuid": "ca6c7850-8203-4544-b8f6-fbbd9560f4ca",
       "wedding": 1,
       "number": 2,
       "capacity": 4

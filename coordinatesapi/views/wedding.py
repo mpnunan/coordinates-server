@@ -1,82 +1,164 @@
 from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
-from rest_framework import serializers, status
-from coordinatesapi.models import Planner, Wedding
-
+from rest_framework import status
+from coordinatesapi.models import Planner, Wedding, WeddingPlanner, TableGuest, Guest, ReceptionTable, Group, Couple, Problem
+from coordinatesapi.serializers import WeddingSerializerShallow, WeddingUpdateSerializer, PlannerWeddingSerializer, GuestListSerializer, WeddingSerializer, TableListSerializer, ReadOnlyWeddingSerializer, ReadOnlyGuestListSerializer, ReadOnlyTableListSerializer, GroupListSerializer, ReadOnlyGroupListSerializer, CoupleSerializer
+from rest_framework.decorators import action
+import uuid
 
 class WeddingView(ViewSet):
 
     def retrieve(self, request, pk):
-        uid = request.META['HTTP_AUTHORIZATION']
+        planner = Planner.objects.get(uid=request.META['HTTP_AUTHORIZATION'])
         try:
-            planner = Planner.objects.get(uid=uid)
-            try:
-                wedding = Wedding.objects.get(pk=pk)
-                if wedding.planner == planner:
-                    serializer = WeddingSerializer(wedding)
-                    response = Response(serializer.data)
-                else:
-                    response =  Response({'message': 'Not Authorized'}, status=status.HTTP_401_UNAUTHORIZED)
-            except Wedding.DoesNotExist as ex:
-                response =  Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
-        except Planner.DoesNotExist:
-            response = Response({'message': 'Not Authorized'}, status=status.HTTP_401_UNAUTHORIZED)
-        return response
-    
-    def list(self, request):
-        weddings = Wedding.objects.all()
-        uid = request.META['HTTP_AUTHORIZATION']
-        try:
-            planner = Planner.objects.get(uid=uid)
-            weddings = Wedding.objects.filter(planner_id=planner)
-            serializer = WeddingSerializerShallow(weddings, many=True)
+            __wedding = Wedding.objects.get(pk=pk)
+            wedding = WeddingPlanner.objects.get(planner=planner, wedding=__wedding)
+            if wedding.read_only is True:
+                serializer = ReadOnlyWeddingSerializer(wedding.wedding)
+            else:
+                serializer = WeddingSerializer(wedding.wedding)
             return Response(serializer.data)
-        except Planner.DoesNotExist:
+        except WeddingPlanner.DoesNotExist:
+            return Response({'message': 'Not Authorized'}, status=status.HTTP_401_UNAUTHORIZED)
+        except Wedding.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+    def list(self, request):
+        planner = Planner.objects.get(uid=request.META['HTTP_AUTHORIZATION'])
+        try:
+            weddings = WeddingPlanner.objects.filter(planner=planner)
+            serializer = PlannerWeddingSerializer(weddings, many=True)
+            return Response(serializer.data)
+        except WeddingPlanner.DoesNotExist:
             return Response({'message': 'Not Authorized'}, status=status.HTTP_401_UNAUTHORIZED)
             
     def create(self, request):
         planner = Planner.objects.get(uid=request.META['HTTP_AUTHORIZATION'])
         wedding = Wedding.objects.create(
+            uuid=uuid.uuid4(),
             venue=request.data["venue"],
             name=request.data["name"],
-            planner=planner
+        )
+        WeddingPlanner.objects.create(
+            wedding=wedding,
+            planner=planner,
+            primary=True,
         )
         serializer = WeddingSerializerShallow(wedding)
         return Response(serializer.data)
     
     def update(self, request, pk):
         planner = Planner.objects.get(uid=request.META['HTTP_AUTHORIZATION'])
-        wedding = Wedding.objects.get(pk=pk)
-        wedding.venue=request.data["venue"]
-        wedding.name=request.data["name"]
-        wedding.planner=planner
-        wedding.save()
-        serializer = UpdateSerializer(wedding)
-        return Response(serializer.data)
+        wedding = Wedding.objects.get(uuid=pk)
+        try:
+            WeddingPlanner.objects.filter(planner=planner, wedding=wedding)
+            wedding.venue=request.data["venue"]
+            wedding.name=request.data["name"]
+            wedding.save()
+            serializer = WeddingUpdateSerializer(wedding)
+            return Response(serializer.data)
+        except WeddingPlanner.DoesNotExist:
+            return Response({'message': 'Not Authorized'}, status=status.HTTP_401_UNAUTHORIZED)
     
     def destroy(self, request, pk):
-        uid=request.META['HTTP_AUTHORIZATION']
+        planner = Planner.objects.get(uid=request.META['HTTP_AUTHORIZATION'])
+        wedding = Wedding.objects.get(uuid=pk)
         try:
-            planner = Planner.objects.get(uid=uid)
-            wedding = Wedding.objects.filter(pk=pk, planner_id=planner)
+            WeddingPlanner.objects.filter(planner=planner, wedding=wedding)
             wedding.delete()
             return Response(None, status=status.HTTP_204_NO_CONTENT)
-        except Planner.DoesNotExist:
+        except WeddingPlanner.DoesNotExist:
             return Response({'message': 'Not Authorized'}, status=status.HTTP_401_UNAUTHORIZED)
+        
+    @action(methods=['get'], detail=True)
+    def guests(self, request, pk):
+        planner = Planner.objects.get(uid=request.META['HTTP_AUTHORIZATION'])
+        try:
+            __wedding = Wedding.objects.get(pk=pk)
+            wedding = WeddingPlanner.objects.get(planner=planner, wedding=__wedding)
+            wedding.guests = Guest.objects.filter(wedding=__wedding)
+            for guest in wedding.guests:
+                guest.seated = len(TableGuest.objects.filter(
+                    guest_id=guest
+                )) > 0
+                try:
+                    couple = Couple.objects.get(first_guest=guest)
+                    guest.partner = couple.second_guest
+                except Couple.DoesNotExist:
+                    pass
+                try:
+                    problem = Problem.objects.get(first_guest=guest)
+                    guest.problem = problem.second_guest
+                except Problem.DoesNotExist:
+                    pass
+            if wedding.read_only is True:
+                serializer = ReadOnlyGuestListSerializer(wedding)
+            else:
+                serializer = GuestListSerializer(wedding)
+            return Response(serializer.data)
+        except WeddingPlanner.DoesNotExist:
+            return Response({'message': 'Not Authorized'}, status=status.HTTP_401_UNAUTHORIZED)
+        except Wedding.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+        
+    @action(methods=['get'], detail=True)
+    def reception_tables(self, request, pk):
+        planner = Planner.objects.get(uid=request.META['HTTP_AUTHORIZATION'])
+        try:
+            __wedding = Wedding.objects.get(pk=pk)
+            wedding = WeddingPlanner.objects.get(planner=planner, wedding=__wedding)
+            wedding.reception_tables = ReceptionTable.objects.filter(wedding=__wedding)
+            for reception_table in wedding.reception_tables:
+                reception_table.full = len(TableGuest.objects.filter(
+                    reception_table_id=reception_table
+                )) > reception_table.capacity
+            if wedding.read_only is True:
+                serializer = ReadOnlyTableListSerializer(wedding)
+            else:
+                serializer = TableListSerializer(wedding)
+            return Response(serializer.data)
+        except WeddingPlanner.DoesNotExist:
+            return Response({'message': 'Not Authorized'}, status=status.HTTP_401_UNAUTHORIZED)
+        except Wedding.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
-class WeddingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Wedding
-        fields = ('id', 'venue', 'name', 'planner')
-        depth = 1
-        
-class WeddingSerializerShallow(serializers.ModelSerializer):
-    class Meta:
-        model = Wedding
-        fields = ('id', 'venue', 'name', 'planner')
-        
-class UpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Wedding
-        fields = ('id', 'name')
+    @action(methods=['get'], detail=True)
+    def groups(self, request, pk):
+        planner = Planner.objects.get(uid=request.META['HTTP_AUTHORIZATION'])
+        try:
+            __wedding = Wedding.objects.get(pk=pk)
+            wedding = WeddingPlanner.objects.get(planner=planner, wedding=__wedding)
+            wedding.groups = Group.objects.filter(wedding=__wedding)
+            if wedding.read_only is True:
+                serializer = ReadOnlyGroupListSerializer(wedding)
+            else:
+                serializer = GroupListSerializer(wedding)
+            return Response(serializer.data)
+        except WeddingPlanner.DoesNotExist:
+            return Response({'message': 'Not Authorized'}, status=status.HTTP_401_UNAUTHORIZED)
+        except Wedding.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+
+    @action(methods=['get'], detail=True)
+    def couples(self, request, pk):
+        planner = Planner.objects.get(uid=request.META['HTTP_AUTHORIZATION'])
+        try:
+            __wedding = Wedding.objects.get(pk=pk)
+            wedding = WeddingPlanner.objects.get(planner=planner, wedding=__wedding)
+            wedding.guests = Guest.objects.filter(wedding=__wedding)
+            for guest in wedding.guests:
+                try:
+                    couple = Couple.objects.get(first_guest=guest)
+                    guest.partner = couple.second_guest
+                except Couple.DoesNotExist:
+                    pass
+            if wedding.read_only is True:
+                serializer = CoupleSerializer(wedding.guests, many=True)
+            else:
+                serializer = CoupleSerializer(wedding.guests, many=True)
+            return Response(serializer.data)
+        except WeddingPlanner.DoesNotExist:
+            return Response({'message': 'Not Authorized'}, status=status.HTTP_401_UNAUTHORIZED)
+        except Wedding.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
