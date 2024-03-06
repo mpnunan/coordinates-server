@@ -16,6 +16,7 @@ class GuestListView(ViewSet):
         family = []
         party = []
         couples = []
+        problems = []
         guests = []
         
         for guest in sorted_guest_list:
@@ -25,9 +26,11 @@ class GuestListView(ViewSet):
                 party.append(guest)
             if 'partner' in guest:
                 couples.append(guest)
+            if 'problem' in guest:
+                problems.append(guest)
             if guest['family'] is False and guest['party'] is False and 'partner' not in guest:
                 guests.append(guest)
         
-        serializer = GuestsSortedSerializer({'guests': guests, 'family': family, 'party': party, 'couples': couples})
+        serializer = GuestsSortedSerializer({'guests': guests, 'family': family, 'party': party, 'couples': couples, 'problems': problems})
         return Response(serializer.data)
         

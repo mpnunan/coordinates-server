@@ -3,8 +3,9 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from coordinatesapi.models import Guest, TableGuest, Wedding
-from coordinatesapi.serializers import GuestSerializer, GuestSerializerShallow
+from coordinatesapi.serializers import GuestSerializer, GuestSerializerShallow, ReadOnlyGuestSerializer
 import uuid
+from rest_framework.decorators import action
 
 
 class GuestView(ViewSet):
@@ -34,11 +35,9 @@ class GuestView(ViewSet):
         return Response(serializer.data)
     
     def update(self, request, pk):
-        wedding = Wedding.objects.get(pk=request.data["wedding"])
         guest = Guest.objects.get(uuid=pk)
         guest.first_name=request.data["firstName"]
         guest.last_name=request.data["lastName"]
-        guest.wedding=wedding
         guest.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
     
@@ -46,3 +45,16 @@ class GuestView(ViewSet):
         guest = Guest.objects.get(uuid=pk)
         guest.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
+    @action(methods=['get'], detail=True)
+    def read_only(self, request, pk):
+        try:
+            guest = Guest.objects.get(pk=pk)
+            
+            guest.seated = len(TableGuest.objects.filter(
+                guest_id=guest
+            )) > 0
+            
+            serializer = ReadOnlyGuestSerializer(guest)
+            return Response(serializer.data)
+        except Guest.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)

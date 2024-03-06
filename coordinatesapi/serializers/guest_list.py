@@ -23,5 +23,6 @@ class GuestsSortedSerializer(serializers.Serializer):
     family = serializers.ListField()
     party = serializers.ListField()
     couples = serializers.ListField()
+    problems = serializers.ListField()
     class Meta:
-        fields = ('guests', 'family', 'party', 'couples')
+        fields = ('guests', 'family', 'party', 'couples', 'problems')
