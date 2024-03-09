@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from coordinatesapi.models import Wedding, WeddingPlanner
-from .guest import GuestSerializerShallow
 from .planner import WeddingPlannerSerializer
 from .reception_table import ReceptionTableSerializer
 from .group import GroupSerializer

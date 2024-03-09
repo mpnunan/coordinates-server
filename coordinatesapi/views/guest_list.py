@@ -6,19 +6,26 @@ from .wedding import WeddingView
 from coordinatesapi.serializers import GuestsSortedSerializer
 import json
 
+
 class GuestListView(ViewSet):
     def retrieve(self, request, pk):
         __guest_list = WeddingView.guests(self, request, pk)
         guest_list = __guest_list.data
         __sorted_guest_list = json.dumps(guest_list["guests"])
         sorted_guest_list = json.loads(__sorted_guest_list)
-        
+
+        side = request.query_params.get('side', None)
+        if side is not None:
+            sorted_guest_list = filter(
+                lambda guest: guest['participant'] if str(guest['participant']['id']) == side else None, sorted_guest_list
+            )
+
         family = []
         party = []
         couples = []
         problems = []
         guests = []
-        
+
         for guest in sorted_guest_list:
             if guest['family'] is True:
                 family.append(guest)
@@ -30,7 +37,7 @@ class GuestListView(ViewSet):
                 problems.append(guest)
             if guest['family'] is False and guest['party'] is False and 'partner' not in guest:
                 guests.append(guest)
-        
-        serializer = GuestsSortedSerializer({'guests': guests, 'family': family, 'party': party, 'couples': couples, 'problems': problems})
+
+        serializer = GuestsSortedSerializer(
+            {'guests': guests, 'family': family, 'party': party, 'couples': couples, 'problems': problems})
         return Response(serializer.data)
-        

@@ -14,7 +14,7 @@ class SortedGuestListSerializer(serializers.ModelSerializer):
     problem = NestedGuestListSerializer(read_only=True)
     class Meta:
         model = Guest
-        fields = ('id', 'uuid', 'participant', 'full_name', 'table_number', 'group', 'family', 'party', 'primary', 'seated', 'partner', 'problem')
+        fields = ('id', 'uuid', 'participant', 'full_name', 'table_number', 'group', 'family', 'parent', 'party', 'primary', 'seated', 'partner', 'problem')
         depth = 1
 
 

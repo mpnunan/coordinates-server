@@ -10,7 +10,8 @@
       "participant": 1,
       "party": true,
       "family": false,
-      "primary": true
+      "primary": true,
+      "parent": false
     }
   },
   {
@@ -24,7 +25,8 @@
       "participant": 1,
       "party": false,
       "family": true,
-      "primary": false
+      "primary": false,
+      "parent": false
     }
   },
   {
@@ -38,7 +40,8 @@
       "participant": 2,
       "party": true,
       "family": true,
-      "primary": false
+      "primary": false,
+      "parent": false
     }
   },
   {
@@ -52,7 +55,8 @@
       "participant": 2,
       "party": true,
       "family": false,
-      "primary": true
+      "primary": true,
+      "parent": false
     }
   },
   {
@@ -66,7 +70,8 @@
       "participant": 1,
       "party": true,
       "family": true,
-      "primary": false
+      "primary": false,
+      "parent": false
     }
   },
   {
@@ -80,7 +85,8 @@
       "participant": 1,
       "party": false,
       "family": false,
-      "primary": false
+      "primary": false,
+      "parent": false
     }
   },
   {
@@ -94,7 +100,8 @@
       "participant": 2,
       "party": false,
       "family": false,
-      "primary": false
+      "primary": false,
+      "parent": false
     }
   },
   {
@@ -108,7 +115,8 @@
       "participant": 2,
       "party": false,
       "family": false,
-      "primary": false
+      "primary": false,
+      "parent": false
     }
   }
 ]

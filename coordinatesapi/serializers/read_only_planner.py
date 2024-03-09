@@ -100,7 +100,7 @@ class ReadOnlySortedGuestListSerializer(serializers.ModelSerializer):
     participant = ReadOnlyParticipantSerializer(read_only=True)
     class Meta:
         model = Guest
-        fields = ('id', 'full_name', 'participant', 'table_number', 'group', 'family', 'party', 'primary', 'seated', 'partner', 'problem')
+        fields = ('id', 'full_name', 'participant', 'table_number', 'group', 'family', 'parent', 'party', 'primary', 'seated', 'partner', 'problem')
 
 class ReadOnlyGuestListSerializer(serializers.ModelSerializer):
     guests = ReadOnlySortedGuestListSerializer(many=True, read_only=True)

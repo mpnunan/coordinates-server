@@ -3,5 +3,6 @@ from .wedding import WeddingSerializerShallow, WeddingUpdateSerializer, PlannerW
 from .guest import GuestSerializerShallow, GuestSerializer, CoupleSerializer
 from .planner import PlannerSerializer, WeddingPlannerSerializer, PlannerDetailSerializer
 from .reception_table import ReceptionTableSerializer, ReceptionTableSerializerShallow
-from .read_only_planner import ReadOnlyWeddingSerializer, ReadOnlyGuestListSerializer, ReadOnlyTableListSerializer, ReadOnlyGroupListSerializer, ReadOnlyGuestSerializer, ReadOnlyReceptionTableSerializer, ReadOnlyGroupSerializer
+from .read_only_planner import ReadOnlyWeddingSerializer, ReadOnlyGuestListSerializer, ReadOnlyTableListSerializer, ReadOnlyGroupListSerializer, ReadOnlyGuestSerializer, ReadOnlyReceptionTableSerializer, ReadOnlyGroupSerializer, ReadOnlyParticipantSerializer
 from .guest_list import GuestsSortedSerializer
+from .participant import ParticipantSerializer
