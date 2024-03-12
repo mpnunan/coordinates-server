@@ -58,7 +58,7 @@ class ReadOnlyReceptionTableSerializer(serializers.ModelSerializer):
     guests = ReadOnlyTableGuestSerializer(many=True, read_only=True)
     class Meta:
         model = ReceptionTable
-        fields = ('id', 'number', 'capacity', 'guests', 'full')
+        fields = ('id', 'number', 'capacity', 'guests', 'full', 'wedding_id')
         
 class ReadOnlyTableListSerializer(serializers.ModelSerializer):
     reception_tables = ReadOnlyReceptionTableSerializer(many=True, read_only=True)

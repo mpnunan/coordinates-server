@@ -92,6 +92,7 @@ class WeddingView(ViewSet):
                     guest.problem = problem.second_guest
                 except Problem.DoesNotExist:
                     pass
+            
             if wedding.read_only is True:
                 serializer = ReadOnlyGuestListSerializer(wedding)
             else:

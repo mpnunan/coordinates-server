@@ -10,11 +10,11 @@ class ReceptionTableSerializer(serializers.ModelSerializer):
     guests = TableGuestSerializer(many=True, read_only=True)
     class Meta:
         model = ReceptionTable
-        fields = ('id', 'uuid', 'number', 'capacity', 'guests', 'full')
+        fields = ('id', 'uuid', 'number', 'capacity', 'guests', 'full', 'wedding_id')
         depth = 1
 
 class ReceptionTableSerializerShallow(serializers.ModelSerializer):
     guests = TableGuestSerializer(many=True, read_only=True)
     class Meta:
         model = ReceptionTable
-        fields = ('id', 'uuid', 'number', 'capacity', 'guests', 'full')
+        fields = ('id', 'uuid', 'number', 'capacity', 'guests', 'full', 'wedding_id')
