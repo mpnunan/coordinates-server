@@ -26,13 +26,6 @@ class GuestsSortedSerializer(serializers.Serializer):
     problems = serializers.ListField()
     class Meta:
         fields = ('guests', 'family', 'party', 'couples', 'problems')
-        
-class GuestListSerializerShallow(serializers.ModelSerializer):
-    group = GroupSerializerShallow(read_only=True)
-    class Meta:
-        model = Guest
-        fields = ('id', 'uuid', 'participant', 'full_name', 'group', 'family', 'parent', 'party', 'primary', 'partner', 'problem')
-        depth = 1
 
 class GuestsUnseatedSerializer(serializers.Serializer):
     guests = serializers.ListField()

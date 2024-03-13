@@ -88,6 +88,11 @@ class WeddingView(ViewSet):
                 except Couple.DoesNotExist:
                     pass
                 try:
+                    couple = Couple.objects.get(second_guest=guest)
+                    guest.partner = couple.first_guest
+                except Couple.DoesNotExist:
+                    pass
+                try:
                     problem = Problem.objects.get(first_guest=guest)
                     guest.problem = problem.second_guest
                 except Problem.DoesNotExist:
