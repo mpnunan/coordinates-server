@@ -25,7 +25,7 @@ class GuestView(ViewSet):
     
     def create(self, request):
         wedding = Wedding.objects.get(pk=request.data["wedding"])
-        participant = Participant.objects.get(pk=request.data["participant"])
+        participant = Participant.objects.get(uuid=request.data["participant"])
         guest = Guest.objects.create(
             uuid=uuid.uuid4(),
             first_name=request.data["firstName"],
@@ -34,21 +34,21 @@ class GuestView(ViewSet):
             participant = participant,
             family = request.data["family"],
             parent = request.data["parent"],
-            party = request.data["party,"],
+            party = request.data["party"],
             primary = request.data["primary"],
         )
         serializer = GuestCreatedSerializer(guest)
         return Response(serializer.data)
     
     def update(self, request, pk):
-        participant = Participant.objects.get(pk=request.data["participant"])
+        participant = Participant.objects.get(uuid=request.data["participant"])
         guest = Guest.objects.get(uuid=pk)
         guest.first_name=request.data["firstName"]
         guest.last_name=request.data["lastName"]
         guest.participant = participant
         guest.family = request.data["family"]
         guest.parent = request.data["parent"]
-        guest.party = request.data["party,"]
+        guest.party = request.data["party"]
         guest.primary = request.data["primary"]
         guest.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
