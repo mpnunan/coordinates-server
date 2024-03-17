@@ -2,6 +2,11 @@ from rest_framework import serializers
 from coordinatesapi.models import Guest
 from .group import GroupSerializer, GroupSerializerShallow
 
+class GuestCreatedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Guest
+        fields = ('id', 'uuid', 'full_name')
+
 class GuestSerializerShallow(serializers.ModelSerializer):
     table_number = serializers.IntegerField(default=None)
     group = GroupSerializer(read_only=True)
