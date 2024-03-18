@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from coordinatesapi.models import Wedding, WeddingPlanner
-from .guest import GuestSerializerShallow
 from .planner import WeddingPlannerSerializer
 from .reception_table import ReceptionTableSerializer
 from .group import GroupSerializer
@@ -17,7 +16,7 @@ class WeddingSerializer(serializers.ModelSerializer):
 class WeddingSerializerShallow(serializers.ModelSerializer):
     class Meta:
         model = Wedding
-        fields = ('id', 'venue', 'name')
+        fields = ('id', 'uuid', 'venue', 'name')
         
 class WeddingUpdateSerializer(serializers.ModelSerializer):
     class Meta:

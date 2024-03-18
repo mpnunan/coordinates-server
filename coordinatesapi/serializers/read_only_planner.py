@@ -35,7 +35,7 @@ class ReadOnlyGroupSerializer(serializers.ModelSerializer):
 class ReadOnlyGroupSerializerShallow(serializers.ModelSerializer):
     class Meta:
         model = Group
-        fields = ('id', 'uuid', 'name')
+        fields = ('id', 'name')
 
 class ReadOnlyLimitedGroupSerializer(serializers.ModelSerializer):
     class Meta:
@@ -58,7 +58,7 @@ class ReadOnlyReceptionTableSerializer(serializers.ModelSerializer):
     guests = ReadOnlyTableGuestSerializer(many=True, read_only=True)
     class Meta:
         model = ReceptionTable
-        fields = ('id', 'number', 'capacity', 'guests', 'full')
+        fields = ('id', 'number', 'capacity', 'guests', 'full', 'wedding_id')
         
 class ReadOnlyTableListSerializer(serializers.ModelSerializer):
     reception_tables = ReadOnlyReceptionTableSerializer(many=True, read_only=True)
@@ -85,7 +85,7 @@ class ReadOnlyCoupleSerializer(serializers.ModelSerializer):
     partner = ReadOnlyGuestSerializerShallow(read_only=True)
     class Meta:
         model = Guest
-        fields = ('id', 'uuid', 'full_name', 'table_number', 'group', 'partner')
+        fields = ('id', 'full_name', 'table_number', 'group', 'partner')
 
 class ReadOnlyNestedGuestListSerializer(serializers.ModelSerializer):
     class Meta:
@@ -100,7 +100,7 @@ class ReadOnlySortedGuestListSerializer(serializers.ModelSerializer):
     participant = ReadOnlyParticipantSerializer(read_only=True)
     class Meta:
         model = Guest
-        fields = ('id', 'uuid', 'full_name', 'participant', 'table_number', 'group', 'family', 'party', 'primary', 'seated', 'partner', 'problem')
+        fields = ('id', 'full_name', 'participant', 'table_number', 'group', 'family', 'parent', 'party', 'primary', 'seated', 'partner', 'problem')
 
 class ReadOnlyGuestListSerializer(serializers.ModelSerializer):
     guests = ReadOnlySortedGuestListSerializer(many=True, read_only=True)

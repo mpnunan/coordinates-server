@@ -14,7 +14,7 @@ class SortedGuestListSerializer(serializers.ModelSerializer):
     problem = NestedGuestListSerializer(read_only=True)
     class Meta:
         model = Guest
-        fields = ('id', 'uuid', 'participant', 'full_name', 'table_number', 'group', 'family', 'party', 'primary', 'seated', 'partner', 'problem')
+        fields = ('id', 'uuid', 'participant', 'full_name', 'table_number', 'group', 'family', 'parent', 'party', 'primary', 'seated', 'partner', 'problem')
         depth = 1
 
 
@@ -23,5 +23,12 @@ class GuestsSortedSerializer(serializers.Serializer):
     family = serializers.ListField()
     party = serializers.ListField()
     couples = serializers.ListField()
+    problems = serializers.ListField()
     class Meta:
-        fields = ('guests', 'family', 'party', 'couples')
+        fields = ('guests', 'family', 'party', 'couples', 'problems')
+
+class GuestsUnseatedSerializer(serializers.Serializer):
+    guests = serializers.ListField()
+    length = serializers.IntegerField()
+    class Meta:
+        fields = ('guests', 'length')

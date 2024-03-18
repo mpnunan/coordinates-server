@@ -2,8 +2,8 @@ from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from coordinatesapi.models import Planner, Wedding, WeddingPlanner, TableGuest, Guest, ReceptionTable, Group, Couple, Problem
-from coordinatesapi.serializers import WeddingSerializerShallow, WeddingUpdateSerializer, PlannerWeddingSerializer, GuestListSerializer, WeddingSerializer, TableListSerializer, ReadOnlyWeddingSerializer, ReadOnlyGuestListSerializer, ReadOnlyTableListSerializer, GroupListSerializer, ReadOnlyGroupListSerializer, CoupleSerializer
+from coordinatesapi.models import Planner, Wedding, WeddingPlanner, Participant, TableGuest, Guest, ReceptionTable, Group, Couple, Problem
+from coordinatesapi.serializers import WeddingSerializerShallow, WeddingUpdateSerializer, PlannerWeddingSerializer, GuestListSerializer, WeddingSerializer, TableListSerializer, ReadOnlyWeddingSerializer, ReadOnlyGuestListSerializer, ReadOnlyTableListSerializer, GroupListSerializer, ReadOnlyGroupListSerializer, CoupleSerializer, ParticipantSerializer, ReadOnlyParticipantSerializer
 from rest_framework.decorators import action
 import uuid
 
@@ -37,7 +37,7 @@ class WeddingView(ViewSet):
         wedding = Wedding.objects.create(
             uuid=uuid.uuid4(),
             venue=request.data["venue"],
-            name=request.data["name"],
+            name=request.data["weddingName"],
         )
         WeddingPlanner.objects.create(
             wedding=wedding,
@@ -53,7 +53,7 @@ class WeddingView(ViewSet):
         try:
             WeddingPlanner.objects.filter(planner=planner, wedding=wedding)
             wedding.venue=request.data["venue"]
-            wedding.name=request.data["name"]
+            wedding.name=request.data["weddingName"]
             wedding.save()
             serializer = WeddingUpdateSerializer(wedding)
             return Response(serializer.data)
@@ -77,6 +77,7 @@ class WeddingView(ViewSet):
             __wedding = Wedding.objects.get(pk=pk)
             wedding = WeddingPlanner.objects.get(planner=planner, wedding=__wedding)
             wedding.guests = Guest.objects.filter(wedding=__wedding)
+                
             for guest in wedding.guests:
                 guest.seated = len(TableGuest.objects.filter(
                     guest_id=guest
@@ -87,10 +88,21 @@ class WeddingView(ViewSet):
                 except Couple.DoesNotExist:
                     pass
                 try:
+                    couple = Couple.objects.get(second_guest=guest)
+                    guest.partner = couple.first_guest
+                except Couple.DoesNotExist:
+                    pass
+                try:
                     problem = Problem.objects.get(first_guest=guest)
                     guest.problem = problem.second_guest
                 except Problem.DoesNotExist:
                     pass
+                try:
+                    problem = Problem.objects.get(second_guest=guest)
+                    guest.problem = problem.first_guest
+                except Problem.DoesNotExist:
+                    pass
+            
             if wedding.read_only is True:
                 serializer = ReadOnlyGuestListSerializer(wedding)
             else:
@@ -141,22 +153,17 @@ class WeddingView(ViewSet):
 
 
     @action(methods=['get'], detail=True)
-    def couples(self, request, pk):
+    def participants(self, request, pk):
         planner = Planner.objects.get(uid=request.META['HTTP_AUTHORIZATION'])
         try:
             __wedding = Wedding.objects.get(pk=pk)
             wedding = WeddingPlanner.objects.get(planner=planner, wedding=__wedding)
-            wedding.guests = Guest.objects.filter(wedding=__wedding)
-            for guest in wedding.guests:
-                try:
-                    couple = Couple.objects.get(first_guest=guest)
-                    guest.partner = couple.second_guest
-                except Couple.DoesNotExist:
-                    pass
+            participants = Participant.objects.filter(wedding=__wedding)
+           
             if wedding.read_only is True:
-                serializer = CoupleSerializer(wedding.guests, many=True)
+                serializer = ReadOnlyParticipantSerializer(participants, many=True)
             else:
-                serializer = CoupleSerializer(wedding.guests, many=True)
+                serializer = ParticipantSerializer(participants, many=True)
             return Response(serializer.data)
         except WeddingPlanner.DoesNotExist:
             return Response({'message': 'Not Authorized'}, status=status.HTTP_401_UNAUTHORIZED)

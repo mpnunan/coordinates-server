@@ -15,6 +15,7 @@ class Guest(models.Model):
     wedding = models.ForeignKey(Wedding, on_delete=models.CASCADE, related_name='guests')
     participant = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name='participants')
     family = models.BooleanField(default=False)
+    parent = models.BooleanField(default=False)
     party = models.BooleanField(default=False)
     primary = models.BooleanField(default=False)
 
