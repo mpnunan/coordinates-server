@@ -16,10 +16,11 @@ class GuestSerializerShallow(serializers.ModelSerializer):
         
 class GuestSerializer(serializers.ModelSerializer):
     table_number = serializers.IntegerField(default=None)
-    group = GroupSerializer(read_only=True)
+    group = GroupSerializerShallow(read_only=True)
     class Meta:
         model = Guest
-        fields = ('id', 'uuid', 'first_name', 'last_name', 'wedding_id', 'table_number', 'group', 'seated')
+        fields = ('id', 'uuid', 'first_name', 'last_name', 'wedding_id', 'table_number', 'group', 'seated', 'participant', 'family', 'parent', 'party', 'primary')
+        depth = 1
 
 class CoupleSerializer(serializers.ModelSerializer):
     table_number = serializers.IntegerField(default=None)
