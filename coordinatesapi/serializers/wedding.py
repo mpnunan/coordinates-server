@@ -16,7 +16,7 @@ class WeddingSerializer(serializers.ModelSerializer):
 class WeddingSerializerShallow(serializers.ModelSerializer):
     class Meta:
         model = Wedding
-        fields = ('id', 'venue', 'name')
+        fields = ('id', 'uuid', 'venue', 'name')
         
 class WeddingUpdateSerializer(serializers.ModelSerializer):
     class Meta:

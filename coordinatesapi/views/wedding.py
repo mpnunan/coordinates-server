@@ -37,7 +37,7 @@ class WeddingView(ViewSet):
         wedding = Wedding.objects.create(
             uuid=uuid.uuid4(),
             venue=request.data["venue"],
-            name=request.data["name"],
+            name=request.data["weddingName"],
         )
         WeddingPlanner.objects.create(
             wedding=wedding,
@@ -53,7 +53,7 @@ class WeddingView(ViewSet):
         try:
             WeddingPlanner.objects.filter(planner=planner, wedding=wedding)
             wedding.venue=request.data["venue"]
-            wedding.name=request.data["name"]
+            wedding.name=request.data["weddingName"]
             wedding.save()
             serializer = WeddingUpdateSerializer(wedding)
             return Response(serializer.data)
