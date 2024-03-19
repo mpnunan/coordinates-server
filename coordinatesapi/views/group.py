@@ -2,7 +2,7 @@ from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from coordinatesapi.models import Group, Wedding
+from coordinatesapi.models import Group, Wedding, Planner, WeddingPlanner
 from coordinatesapi.serializers import GroupSerializer, ReadOnlyGroupSerializer
 import uuid
 from rest_framework.decorators import action
@@ -20,13 +20,21 @@ class GroupView(ViewSet):
     
     def create(self, request):
         wedding = Wedding.objects.get(pk=request.data["wedding"])
-        group = Group.objects.create(
-            uuid=uuid.uuid4(),
-            name=request.data["name"],
-            wedding=wedding,
-        )
-        serializer = GroupSerializer(group)
-        return Response(serializer.data)
+        __planner = Planner.objects.get(uid=request.META['HTTP_AUTHORIZATION'])
+        try:
+            planner = WeddingPlanner.objects.get(planner=__planner, wedding=wedding)
+            if planner.read_only is True:
+                pass
+            else:
+                group = Group.objects.create(
+                    uuid=uuid.uuid4(),
+                    name=request.data["name"],
+                    wedding=wedding,
+                )
+                serializer = GroupSerializer(group)
+                return Response(serializer.data)
+        except WeddingPlanner.DoesNotExist:
+            return Response({'message': 'Not Authorized'}, status=status.HTTP_401_UNAUTHORIZED)
     
     def update(self, request, pk):
         wedding = Wedding.objects.get(pk=request.data["wedding"])

@@ -2,7 +2,7 @@ from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from coordinatesapi.models import Guest, TableGuest, Wedding, Participant
+from coordinatesapi.models import Guest, TableGuest, Wedding, Participant, Planner, WeddingPlanner
 from coordinatesapi.serializers import GuestCreatedSerializer, GuestSerializer, GuestSerializerShallow, ReadOnlyGuestSerializer
 import uuid
 from rest_framework.decorators import action
@@ -26,20 +26,27 @@ class GuestView(ViewSet):
     def create(self, request):
         wedding = Wedding.objects.get(pk=request.data["wedding"])
         participant = Participant.objects.get(uuid=request.data["participant"])
-        guest = Guest.objects.create(
-            uuid=uuid.uuid4(),
-            first_name=request.data["firstName"],
-            last_name=request.data["lastName"],
-            wedding=wedding,
-            participant = participant,
-            family = request.data["family"],
-            parent = request.data["parent"],
-            party = request.data["party"],
-            primary = request.data["primary"],
-        )
-        serializer = GuestCreatedSerializer(guest)
-        return Response(serializer.data)
-    
+        __planner = Planner.objects.get(uid=request.META['HTTP_AUTHORIZATION'])
+        try:
+            planner = WeddingPlanner.objects.get(planner=__planner, wedding=wedding)
+            if planner.read_only is True:
+                pass
+            else:
+                guest = Guest.objects.create(
+                uuid=uuid.uuid4(),
+                first_name=request.data["firstName"],
+                last_name=request.data["lastName"],
+                wedding=wedding,
+                participant = participant,
+                family = request.data["family"],
+                parent = request.data["parent"],
+                party = request.data["party"],
+                primary = request.data["primary"],
+                )
+                serializer = GuestCreatedSerializer(guest)
+                return Response(serializer.data)
+        except WeddingPlanner.DoesNotExist:
+            return Response({'message': 'Not Authorized'}, status=status.HTTP_401_UNAUTHORIZED)
     def update(self, request, pk):
         participant = Participant.objects.get(uuid=request.data["participant"])
         guest = Guest.objects.get(uuid=pk)

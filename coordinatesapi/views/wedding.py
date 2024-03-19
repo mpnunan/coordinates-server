@@ -51,7 +51,7 @@ class WeddingView(ViewSet):
         planner = Planner.objects.get(uid=request.META['HTTP_AUTHORIZATION'])
         wedding = Wedding.objects.get(uuid=pk)
         try:
-            WeddingPlanner.objects.filter(planner=planner, wedding=wedding)
+            WeddingPlanner.objects.get(planner=planner, wedding=wedding)
             wedding.venue=request.data["venue"]
             wedding.name=request.data["weddingName"]
             wedding.save()
@@ -64,7 +64,7 @@ class WeddingView(ViewSet):
         planner = Planner.objects.get(uid=request.META['HTTP_AUTHORIZATION'])
         wedding = Wedding.objects.get(uuid=pk)
         try:
-            WeddingPlanner.objects.filter(planner=planner, wedding=wedding)
+            WeddingPlanner.objects.get(planner=planner, wedding=wedding)
             wedding.delete()
             return Response(None, status=status.HTTP_204_NO_CONTENT)
         except WeddingPlanner.DoesNotExist:

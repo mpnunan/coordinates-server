@@ -3,7 +3,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import action
-from coordinatesapi.models import ReceptionTable, Wedding, TableGuest, Guest
+from coordinatesapi.models import ReceptionTable, Wedding, TableGuest, Guest, Planner, WeddingPlanner
 from coordinatesapi.serializers import ReceptionTableSerializer, ReceptionTableSerializerShallow, ReadOnlyReceptionTableSerializer
 import uuid
 
@@ -25,24 +25,37 @@ class ReceptionTableView(ViewSet):
     
     def create(self, request):
         wedding = Wedding.objects.get(pk=request.data["wedding"])
-        reception_table = ReceptionTable.objects.create(
-            uuid=uuid.uuid4(),
-            wedding=wedding,
-            number=request.data["number"],
-            capacity=request.data["capacity"]
-        )
-        serializer = ReceptionTableSerializerShallow(reception_table)
-        return Response(serializer.data)
-    
+        __planner = Planner.objects.get(uid=request.META['HTTP_AUTHORIZATION'])
+        try:
+            planner = WeddingPlanner.objects.get(planner=__planner, wedding=wedding)
+            if planner.read_only is True:
+                pass
+            else:
+                __number = ReceptionTable.objects.filter(wedding=wedding)
+                number = len(__number) + 1
+                reception_table = ReceptionTable.objects.create(
+                    uuid=uuid.uuid4(),
+                    wedding=wedding,
+                    number=number,
+                    capacity=request.data["capacity"]
+                )
+                serializer = ReceptionTableSerializerShallow(reception_table)
+                return Response(serializer.data)
+        except WeddingPlanner.DoesNotExist:
+            return Response({'message': 'Not Authorized'}, status=status.HTTP_401_UNAUTHORIZED)
     def update(self, request, pk):
         reception_table = ReceptionTable.objects.get(uuid=pk)
-        reception_table.number=request.data["number"]
         reception_table.capacity=request.data["capacity"]
         reception_table.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
     
     def destroy(self, request, pk):
         reception_table = ReceptionTable.objects.get(uuid=pk)
+        __reception_tables = ReceptionTable.objects.filter(wedding=reception_table.wedding)
+        for __reception_table in __reception_tables:
+            if __reception_table.number > reception_table.number:
+                __reception_table.number = __reception_table.number - 1
+                __reception_table.save()
         reception_table.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
       
