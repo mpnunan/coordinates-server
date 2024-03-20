@@ -178,7 +178,7 @@ class WeddingView(ViewSet):
             __wedding = Wedding.objects.get(pk=pk)
             planner = WeddingPlanner.objects.get(planner=__planner, wedding=__wedding)
             if planner is not None:
-                planners = WeddingPlanner.objects.filter(wedding=__wedding).exclude(planner=planner)
+                planners = WeddingPlanner.objects.filter(wedding=__wedding).exclude(planner=__planner)
                 serializer = WeddingPlannerSerializer(planners, many=True)
                 return Response(serializer.data)
         except WeddingPlanner.DoesNotExist as ex:
@@ -211,7 +211,7 @@ class WeddingView(ViewSet):
         try:
             wedding = Wedding.objects.get(pk=pk)
             WeddingPlanner.objects.get(planner=planner, wedding=wedding, primary=True)
-            wedding_planner.read_only=request.data["read_only"]
+            wedding_planner.read_only=request.data["readOnly"]
             wedding_planner.save()
             return Response({'message': 'Planner Updated'}, status=status.HTTP_204_NO_CONTENT)
         except WeddingPlanner.DoesNotExist:

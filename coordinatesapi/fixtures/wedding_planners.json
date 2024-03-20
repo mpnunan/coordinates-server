@@ -4,7 +4,8 @@
     "pk": 1,
     "fields": {
       "wedding": 1,
-      "planner": 2
+      "planner": 2,
+      "primary": true
     }
   }
 ]
