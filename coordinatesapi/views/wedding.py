@@ -188,7 +188,7 @@ class WeddingView(ViewSet):
     @action(methods=['post'], detail=True)
     def add_planner(self, request, pk):
         planner = Planner.objects.get(uid=request.META['HTTP_AUTHORIZATION'])
-        wedding_planner = Planner.objects.get((Q(email=request.data["email"]) | Q(phone_number=request.data["phoneNumber"])))
+        wedding_planner = Planner.objects.get(phone_number=request.data["phoneNumber"])
         try:
             wedding = Wedding.objects.get(pk=pk)
             WeddingPlanner.objects.get(planner=planner, wedding=wedding, primary=True)
@@ -207,10 +207,11 @@ class WeddingView(ViewSet):
     @action(methods=['put'], detail=True)
     def update_planner(self, request, pk):
         planner = Planner.objects.get(uid=request.META['HTTP_AUTHORIZATION'])
-        wedding_planner = Planner.objects.get((Q(email=request.data["email"]) | Q(phone_number=request.data["phoneNumber"])))
+        __wedding_planner = Planner.objects.get(phone_number=request.data["phoneNumber"])
         try:
             wedding = Wedding.objects.get(pk=pk)
             WeddingPlanner.objects.get(planner=planner, wedding=wedding, primary=True)
+            wedding_planner = WeddingPlanner.objects.get(planner=__wedding_planner, wedding=wedding)
             wedding_planner.read_only=request.data["readOnly"]
             wedding_planner.save()
             return Response({'message': 'Planner Updated'}, status=status.HTTP_204_NO_CONTENT)
@@ -222,11 +223,12 @@ class WeddingView(ViewSet):
     @action(methods=['put'], detail=True)
     def remove_planner(self, request, pk):
         planner = Planner.objects.get(uid=request.META['HTTP_AUTHORIZATION'])
-        wedding_planner = Planner.objects.get((Q(email=request.data["email"]) | Q(phone_number=request.data["phoneNumber"])))
+        __wedding_planner = Planner.objects.get(phone_number=request.data["phoneNumber"])
         try:
             wedding = Wedding.objects.get(pk=pk)
             WeddingPlanner.objects.get(planner=planner, wedding=wedding, primary=True)
-            wedding_planner.destroy()
+            wedding_planner = WeddingPlanner.objects.get(planner=__wedding_planner, wedding=wedding)
+            wedding_planner.delete()
             return Response({'message': 'Planner Removed'}, status=status.HTTP_204_NO_CONTENT)
         except WeddingPlanner.DoesNotExist:
             return Response({'message': 'Not Authorized'}, status=status.HTTP_401_UNAUTHORIZED)
