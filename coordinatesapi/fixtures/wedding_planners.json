@@ -5,7 +5,8 @@
     "fields": {
       "wedding": 1,
       "planner": 2,
-      "primary": true
+      "primary": true,
+      "read_only": false
     }
   }
 ]
