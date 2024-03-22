@@ -27,7 +27,7 @@ class PlannerWeddingSerializer(serializers.ModelSerializer):
     wedding = WeddingSerializerShallow(read_only=True)
     class Meta:
         model = WeddingPlanner
-        fields = ('wedding', 'planner_id')
+        fields = ('wedding', 'planner_id', 'primary', 'read_only')
         depth = 1
         
 class GuestListSerializer(serializers.ModelSerializer):
@@ -47,3 +47,10 @@ class GroupListSerializer(serializers.ModelSerializer):
     class Meta:
         model = WeddingPlanner
         fields = ('wedding_id' ,'groups')
+
+class SortedWeddingSerializer(serializers.Serializer):
+    primary = serializers.ListField()
+    read_only = serializers.ListField()
+    shared = serializers.ListField()
+    class Meta:
+        fields = ('primary', 'read_only', 'shared')

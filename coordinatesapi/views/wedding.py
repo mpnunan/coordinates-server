@@ -40,6 +40,18 @@ class WeddingView(ViewSet):
             venue=request.data["venue"],
             name=request.data["weddingName"],
         )
+        Participant.objects.create(
+            uuid=uuid.uuid4(),
+            wedding=wedding,
+            first_name=request.data["participantOneFirst"],
+            last_name=request.data["participantOneLast"],
+        )
+        Participant.objects.create(
+            uuid=uuid.uuid4(),
+            wedding=wedding,
+            first_name=request.data["participantTwoFirst"],
+            last_name=request.data["participantTwoLast"],
+        )
         WeddingPlanner.objects.create(
             wedding=wedding,
             planner=planner,

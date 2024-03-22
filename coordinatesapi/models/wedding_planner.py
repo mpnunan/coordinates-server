@@ -17,5 +17,5 @@ class WeddingPlanner(models.Model):
     if a planner is the original creator of a wedding'''
     wedding = models.ForeignKey(Wedding, on_delete=models.CASCADE, related_name='planner_weddings')
     planner = models.ForeignKey(Planner, on_delete=models.CASCADE, related_name='wedding_planners')
-    primary = models.BooleanField(null=True)
-    read_only = models.BooleanField(null=True)
+    primary = models.BooleanField(default=False)
+    read_only = models.BooleanField(default=False)

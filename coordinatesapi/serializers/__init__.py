@@ -1,5 +1,5 @@
 from .group import GroupSerializer
-from .wedding import WeddingSerializerShallow, WeddingUpdateSerializer, PlannerWeddingSerializer, GuestListSerializer, WeddingSerializer, TableListSerializer, GroupListSerializer
+from .wedding import WeddingSerializerShallow, WeddingUpdateSerializer, PlannerWeddingSerializer, GuestListSerializer, WeddingSerializer, TableListSerializer, GroupListSerializer, SortedWeddingSerializer
 from .guest import GuestCreatedSerializer, GuestSerializerShallow, GuestSerializer, CoupleSerializer
 from .planner import PlannerSerializer, WeddingPlannerSerializer, PlannerDetailSerializer
 from .reception_table import ReceptionTableSerializer, ReceptionTableSerializerShallow
